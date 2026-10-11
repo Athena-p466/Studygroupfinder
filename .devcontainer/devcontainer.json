@@ -1,0 +1,6 @@
+{
+   "name": "StudyGroupFinder Dev Container",
+   "image": "mcr.microsoft.com/devcontainers/java:1-21-bookworm",
+   "forwardPorts": [8080],
+   "postCreateCommand": "./mvnw -1 -ntp dependency:go-offline"
+}

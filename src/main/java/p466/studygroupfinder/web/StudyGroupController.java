@@ -32,6 +32,15 @@ public class StudyGroupController {
 
     @GetMapping
     public String showGroups(@RequestParam(defaultValue = "") String courseId, Model model ) {
+        model.addAttribute("selectedCourseId", courseId);
+
+        if(courseId.isEmpty()){
+            model.addAttribute("groups", groupRepo.findAll());
+
+        }
+        else{
+            model.addAttribute("groups", groupRepo.findByCourseId(courseId));
+        }
         return "groups";
     }
 }

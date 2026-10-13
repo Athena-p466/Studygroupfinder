@@ -32,11 +32,11 @@
 
     <div th:each="g : ${groups}">
         <h3 th:text="${g.title}">Title</h3>
-        Course: <span th:text="${g.courseId}">Course</span>
-        Description: <span th:text="${g.description}">Description</span>
-        Location: <span th:text="${g.location}">Location</span>
-        Time: <span th:text="${g.meetingTime}">Time</span>
-        Capacity: <span th:text="${g.capacity}">Capacity</span>
+        Course: <span th:text="${g.courseId}">Course</span><br/>
+        Description: <span th:text="${g.description}">Description</span><br/>
+        Location: <span th:text="${g.location}">Location</span><br/>
+        Time: <span th:text="${g.meetingTime}">Time</span><br/>
+        Capacity: <span th:text="${g.capacity}">Capacity</span><br/>
         
 
     </div>

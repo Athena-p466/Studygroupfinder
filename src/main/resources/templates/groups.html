@@ -7,13 +7,44 @@
 </head>
 <body>
 <h1>Find a Study Group</h1>
-<form th:action="@{/groups}">
-    <h3>Choose a course:</h3>
-    <div>
-        <input type="radio" name="courseId" />
-        <span>All Courses</span>
-        <br/>
+
+<form method="GET" th:action="@{/groups}">
+    <h2>Choose a course:</h2>
+    <div th:each="c: ${courses}">
+        <input type="radio"  name="courseId" th:value="${c.id}" th:checked="${c.id == selectedCourseId}"/>
+        <ul>
+        <li>
+            <span th:text="${c.id}">Course</span>
+        </li>
+        <li>
+            <span th:text="${c.title}">Title</span>
+        </li>
+        <li>
+            <span th:text="${c.instructor}">Instructor</span>
+        </li>
+        </ul>
+
     </div>
+    <button>Show Details</button>
+    <span th:if="${error}" th:text="${error}">Error</span>
+
+    <h2>Study Group Details</h2>
+
+    <div th:each="g : ${groups}">
+        <h3 th:text="${g.title}">Title</h3>
+        Course: <span th:text="${g.courseId}">Course</span>
+        Description: <span th:text="${g.description}">Description</span>
+        Location: <span th:text="${g.location}">Location</span>
+        Time: <span th:text="${g.meetingTime}">Time</span>
+        Capacity: <span th:text="${g.capacity}">Capacity</span>
+        
+
+    </div>
+
+
+
+    
+
     
     
 </form>

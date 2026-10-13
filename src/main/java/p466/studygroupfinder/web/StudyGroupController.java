@@ -31,7 +31,7 @@ public class StudyGroupController {
     }
 
     @GetMapping
-    public String showGroups() {
+    public String showGroups(@RequestParam(defaultValue = "") String courseId, Model model ) {
         return "groups";
     }
 }

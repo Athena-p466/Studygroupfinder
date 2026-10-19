@@ -18,7 +18,9 @@ create table if not exists StudyGroup (
 create table if not exists Users (
     id identity,
     username varchar(50) not null,
-    password varchar(100) not null
+    password varchar(100) not null,
+    first_name varchar(50) not null,
+    last_name varchar(50) not null
 );
 
 alter table StudyGroup add foreign key (course_id) references Course(id);

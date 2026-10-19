@@ -16,7 +16,6 @@ import java.util.Collection;
 
 @Table("USERS")
 @Data
-@NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
 @RequiredArgsConstructor
 public class User implements UserDetails {
     private static final long serialVersionUID = 1L;
@@ -26,6 +25,8 @@ public class User implements UserDetails {
 
     private final String username;
     private final String password;
+    private final String firstName;
+    private final String lastName;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

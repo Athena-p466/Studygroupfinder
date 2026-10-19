@@ -4,12 +4,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jdbc.test.autoconfigure.DataJdbcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import p466.studygroupfinder.Course;
 import p466.studygroupfinder.StudyGroup;
 
 import java.util.List;
 
-@DataJdbcTest
+@SpringBootTest
 public class StudyGroupRepositoryTest {
 
     @Autowired

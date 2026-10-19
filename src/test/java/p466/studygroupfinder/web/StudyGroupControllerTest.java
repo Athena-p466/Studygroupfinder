@@ -10,14 +10,21 @@ import java.util.Collections;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import p466.studygroupfinder.StudyGroup;
 import p466.studygroupfinder.data.CourseRepository;
 import p466.studygroupfinder.data.StudyGroupRepository;
+import p466.studygroupfinder.data.UserRepository;
+import p466.studygroupfinder.security.SecurityConfig;
 
 @WebMvcTest(StudyGroupController.class)
+@Import(SecurityConfig.class)
 public class StudyGroupControllerTest {
+
+    @MockitoBean
+    private UserRepository userRepo;
 
     @Autowired
     private MockMvc mockMvc;

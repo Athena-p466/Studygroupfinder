@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Study Group</title>
+</head>
+<body>
+<h1>Create a Study Group</h1>
+<p><a th:href="@{/groups}">Back to groups</a></p>
+<form method="POST" th:action="@{/groups/create}" th:object="${groupForm}">
+    <p>
+        <label>Course:
+            <select th:field="*{courseId}">
+                <option value="">Choose a course</option>
+                <option th:each="c : ${courses}" th:value="${c.id}"
+                        th:text="|${c.id} - ${c.title} (${c.instructor})|">Course</option>
+            </select>
+        </label>
+        <span th:if="${#fields.hasErrors('courseId')}" th:errors="*{courseId}"></span>
+    </p>
+    <p>
+        <label>Group title: <input type="text" th:field="*{title}" maxlength="50"/></label>
+        <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
+    </p>
+    <p>
+        <label>Description: <textarea th:field="*{description}" maxlength="500"></textarea></label>
+        <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></span>
+    </p>
+    <p>
+        <label>Location: <input type="text" th:field="*{location}" maxlength="50"/></label>
+        <span th:if="${#fields.hasErrors('location')}" th:errors="*{location}"></span>
+    </p>
+    <p>
+        <label>Meeting time: <input type="datetime-local" th:field="*{meetingTime}"/></label>
+        <span th:if="${#fields.hasErrors('meetingTime')}" th:errors="*{meetingTime}"></span>
+    </p>
+    <p>
+        <label>Maximum members: <input type="number" th:field="*{capacity}" min="2" max="100"/></label>
+        <span th:if="${#fields.hasErrors('capacity')}" th:errors="*{capacity}"></span>
+    </p>
+    <button type="submit">Create group</button>
+</form>
+</body>
+</html>

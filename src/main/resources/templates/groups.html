@@ -1,54 +1,44 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:th="https://www.thymeleaf.org">
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Study Group Finder</title>
 </head>
 <body>
 <h1>Find a Study Group</h1>
+<p><a th:href="@{/}">Home</a> | <a th:href="@{/groups/create}">Create a group</a></p>
+<p th:if="${error}" th:text="${error}">Error</p>
+<p th:if="${success}" th:text="${success}">Success</p>
 
+<!-- GET search and POST join must be separate forms. -->
 <form method="GET" th:action="@{/groups}">
-    <h2>Choose a course:</h2>
-    <div th:each="c: ${courses}">
-        <input type="radio"  name="courseId" th:value="${c.id}" th:checked="${c.id == selectedCourseId}"/>
-        <ul>
-        <li>
-            <span th:text="${c.id}">Course</span>
-        </li>
-        <li>
-            <span th:text="${c.title}">Title</span>
-        </li>
-        <li>
-            <span th:text="${c.instructor}">Instructor</span>
-        </li>
-        </ul>
-
+    <h2>Choose a course</h2>
+    <div th:each="c : ${courses}">
+        <label>
+            <input type="radio" name="courseId" th:value="${c.id}"
+                   th:checked="${c.id == selectedCourseId}"/>
+            <span th:text="|${c.id} - ${c.title} (${c.instructor})|">Course</span>
+        </label>
     </div>
-    <button>Show Details</button>
-    <span th:if="${error}" th:text="${error}">Error</span>
-
-    <h2>Study Group Details</h2>
-
-    <div th:each="g : ${groups}">
-        <h3 th:text="${g.title}">Title</h3>
-        Course: <span th:text="${g.courseId}">Course</span><br/>
-        Description: <span th:text="${g.description}">Description</span><br/>
-        Location: <span th:text="${g.location}">Location</span><br/>
-        Time: <span th:text="${g.meetingTime}">Time</span><br/>
-        Capacity: <span th:text="${g.capacity}">Capacity</span><br/>
-        
-
-    </div>
-
-
-
-    
-
-    
-    
+    <button type="submit">Show groups</button>
+    <a th:href="@{/groups}">Show all</a>
 </form>
 
-
+<h2>Study Group Details</h2>
+<p th:if="${#lists.isEmpty(groups)}">No groups found.</p>
+<div th:each="g : ${groups}">
+    <h3 th:text="${g.title}">Title</h3>
+    Course: <span th:text="${g.courseId}">Course</span><br/>
+    Description: <span th:text="${g.description}">Description</span><br/>
+    Location: <span th:text="${g.location}">Location</span><br/>
+    Time: <span th:text="${g.meetingTime}">Time</span><br/>
+    Members: <span th:text="|${memberCounts[g.id]} / ${g.capacity}|">0 / 4</span><br/>
+    <form method="POST" th:action="@{/groups/{id}/join(id=${g.id})}"
+          th:if="${memberCounts[g.id] < g.capacity}">
+        <button type="submit">Join group</button>
+    </form>
+    <span th:if="${memberCounts[g.id] >= g.capacity}">Full</span>
+    <hr/>
+</div>
 </body>
 </html>

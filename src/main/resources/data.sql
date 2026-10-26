@@ -1,5 +1,6 @@
 delete from StudyGroup;
 delete from Course;
+delete from GroupMember;
 
 insert into Course (id, title, instructor) values ('CSCI-P466', 'Software Engineering',  'Dr. Bahramian');
 insert into Course (id, title, instructor) values ('CSCI-C343', 'Data Structure', 'Dr. Siddiqui');

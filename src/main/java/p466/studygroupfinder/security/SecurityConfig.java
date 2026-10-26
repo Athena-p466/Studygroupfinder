@@ -32,7 +32,19 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-        return http.authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.GET, "/", "/groups").permitAll().requestMatchers("/register", "/login").permitAll().anyRequest().authenticated()).formLogin(form -> form.loginPage("/login").defaultSuccessUrl("/groups", true)).logout(logout -> logout.logoutSuccessUrl("/")).build();
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        return http.authorizeHttpRequests(auth -> auth
+                .requestMatchers("/h2-console/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/", "/groups").permitAll()
+                .requestMatchers("/register", "/login").permitAll()
+                .anyRequest().authenticated())
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**"))
+                .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
+                .formLogin(form -> form.loginPage("/login")
+                        .defaultSuccessUrl("/groups", true))
+                .logout(logout -> logout.logoutSuccessUrl("/"))
+                .build();
     }
+    //declares which paths are public
+
 }

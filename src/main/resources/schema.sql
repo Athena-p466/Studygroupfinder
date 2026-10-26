@@ -24,3 +24,13 @@ create table if not exists Users (
 );
 
 alter table StudyGroup add foreign key (course_id) references Course(id);
+
+create table if not exists GroupMember (
+    id identity primary key,
+    study_group_id bigint not null,
+    user_id bigint not null,
+    constraint member_group foreign key (study_group_id) references StudyGroup(id),
+    constraint member_user foreign key (user_id) references Users(id),
+    constraint membership_user_group unique (user_id, study_group_id)
+
+    );

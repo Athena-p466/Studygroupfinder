@@ -20,6 +20,7 @@ public class StudyGroup {
     private String location;
     private int capacity;
     private LocalDateTime meetingTime;
+    private Long organizerId;
 
 
 }

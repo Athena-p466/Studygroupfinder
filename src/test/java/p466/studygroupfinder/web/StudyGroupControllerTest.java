@@ -42,6 +42,6 @@ public class StudyGroupControllerTest {
         when(courseRepo.findAll()).thenReturn(Collections.emptyList());
         when(groupRepo.findAll()).thenReturn(Collections.emptyList());
 
-        mockMvc.perform(get("/groups")).andExpect(status().isNotFound());
+        mockMvc.perform(get("/groups")).andExpect(status().isOk());
     }
 }

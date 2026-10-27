@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: studygroupfinder-yourinitials
+    name: studygroupfinder-ay
     runtime: docker
     plan: free
     region: oregon

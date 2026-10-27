@@ -1,9 +1,7 @@
 package p466.studygroupfinder.web;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -44,20 +42,33 @@ public class StudyGroupController {
 
     }
 
+    private boolean canEdit(User user, StudyGroup group){
+        if (user == null) return false;
+        if(user.hasRole(User.ADMIN)){
+            return true;
+        }
+        return Objects.equals(group.getOrganizerId(), user.getId());
+    }
+
     @GetMapping
-    public String showGroups(@RequestParam(defaultValue = "") String courseId, Model model) {
+    public String showGroups(@RequestParam(defaultValue = "") String courseId, @AuthenticationPrincipal User user, Model model) {
+
         List<StudyGroup> groups = courseId.isEmpty()
                 ? groupRepo.findAll()
                 : groupRepo.findByCourseId(courseId);
 
         Map<Long, Long> memberCounts = new HashMap<>();
+        Set<Long> editableIds = new HashSet<>();
         for (StudyGroup group : groups) {
             memberCounts.put(group.getId(), memberRepo.countByStudyGroupId(group.getId()));
+            if(canEdit(user, group)){
+                editableIds.add(group.getId());
+            }
         }
-
         model.addAttribute("selectedCourseId", courseId);
         model.addAttribute("groups", groups);
         model.addAttribute("memberCounts", memberCounts);
+        model.addAttribute("editableIds", editableIds);
         return "groups";
         
     }
@@ -70,7 +81,7 @@ public class StudyGroupController {
 
     @PostMapping("/create")
     public String createGroup(@Valid @ModelAttribute("groupForm") StudyGroupForm form,
-                              Errors errors) {
+                              Errors errors, @AuthenticationPrincipal User user) {
         if (form.getCourseId() != null && !form.getCourseId().isBlank()
                 && !courseRepo.existsById(form.getCourseId())) {
             errors.rejectValue("courseId", "invalid", "Please select an existing course");
@@ -94,7 +105,7 @@ public class StudyGroupController {
     public String joinGroup(@PathVariable Long id,
                             @AuthenticationPrincipal User user,
                             RedirectAttributes redirectAttributes) {
-        // Spring Security requires login before this POST can reach the controller.
+
         Optional<StudyGroup> found = groupRepo.findById(id);
         if (found.isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "This group no longer exists.");
@@ -116,7 +127,7 @@ public class StudyGroupController {
             memberRepo.save(member);
             redirectAttributes.addFlashAttribute("success", "You joined the group.");
         } catch (DataAccessException e) {
-            // The database UNIQUE constraint protects against duplicate POSTs.
+
             redirectAttributes.addFlashAttribute("error", "You have already joined this group.");
         }
         return "redirect:/groups";

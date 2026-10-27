@@ -35,8 +35,11 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/h2-console/**").permitAll()
+                .requestMatchers("/actuator/health/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/", "/groups").permitAll()
-                .requestMatchers("/register", "/login").permitAll().requestMatchers("/actuator/health/**").permitAll()
+                .requestMatchers("/register", "/login").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+
                 .anyRequest().authenticated())
                 .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**"))
                 .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))

@@ -10,7 +10,6 @@
 <p th:if="${error}" th:text="${error}">Error</p>
 <p th:if="${success}" th:text="${success}">Success</p>
 
-<!-- GET search and POST join must be separate forms. -->
 <form method="GET" th:action="@{/groups}">
     <h2>Choose a course</h2>
     <div th:each="c : ${courses}">
@@ -38,6 +37,7 @@
         <button type="submit">Join group</button>
     </form>
     <span th:if="${memberCounts[g.id] >= g.capacity}">Full</span>
+    <a th:if="${editableIds.contains(g.id)}" th:href="@{/groups/{id}/edit(id=${g.id})}">Edit this group</a>
     <hr/>
 </div>
 </body>

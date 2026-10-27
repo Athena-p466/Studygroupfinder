@@ -31,7 +31,6 @@
     Description: <span th:text="${g.description}">Description</span><br/>
     Location: <span th:text="${g.location}">Location</span><br/>
     Time: <span th:text="${g.meetingTime}">Time</span><br/>
-    Organizer id: <span th:text="${g.organizerId}">?</span><br/>
     Members: <span th:text="|${memberCounts[g.id]} / ${g.capacity}|">0 / 4</span><br/>
     <form method="POST" th:action="@{/groups/{id}/join(id=${g.id})}"
           th:if="${memberCounts[g.id] < g.capacity}">

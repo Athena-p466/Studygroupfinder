@@ -31,3 +31,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+app.db
+*.db
+*.db-journal
+data/

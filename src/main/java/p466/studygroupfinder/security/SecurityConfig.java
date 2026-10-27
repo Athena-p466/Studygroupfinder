@@ -36,7 +36,7 @@ public class SecurityConfig {
         return http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/", "/groups").permitAll()
-                .requestMatchers("/register", "/login").permitAll()
+                .requestMatchers("/register", "/login").permitAll().requestMatchers("/actuator/health/**").permitAll()
                 .anyRequest().authenticated())
                 .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**"))
                 .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))

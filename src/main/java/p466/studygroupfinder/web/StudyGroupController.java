@@ -99,6 +99,7 @@ public class StudyGroupController {
         group.setLocation(form.getLocation());
         group.setMeetingTime(form.getMeetingTime());
         group.setCapacity(form.getCapacity());
+        group.setOrganizerId(user.getId());
         groupRepo.save(group);
         return "redirect:/groups";
     }

@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: studygroupfinder-yourinitials
+    runtime: docker
+    plan: free
+    region: oregon
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /actuator/health
+    autoDeployTrigger: checksPass
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod,sqlite
+      - key: SQLITE_PATH
+        value: /tmp/app.db

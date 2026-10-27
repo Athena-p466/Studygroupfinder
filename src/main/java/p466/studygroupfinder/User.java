@@ -13,12 +13,16 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 @Table("USERS")
 @Data
 @RequiredArgsConstructor
 public class User implements UserDetails {
     private static final long serialVersionUID = 1L;
+
+    public static final String STUDENT = "STUDENT";
+    public static final String ADMIN = "ADMIN";
 
     @Id
     private Long id;
@@ -27,10 +31,14 @@ public class User implements UserDetails {
     private final String password;
     private final String firstName;
     private final String lastName;
+    private String role = STUDENT;
 
+    public boolean hasRole(String roleName){
+        return roleName.equals(role);
+    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role));
     }
 
     @Override

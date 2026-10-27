@@ -8,4 +8,5 @@ import java.util.List;
 public interface StudyGroupRepository extends CrudRepository<StudyGroup, Long>{
     List<StudyGroup> findAll();
     List<StudyGroup> findByCourseId(String courseId);
+    List<StudyGroup> findByOrganizerId(Long organizerId);
 }

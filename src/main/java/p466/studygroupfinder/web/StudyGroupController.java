@@ -3,6 +3,7 @@ import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +12,7 @@ import org.springframework.validation.Errors;
 
 import jakarta.validation.Valid;
 
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import p466.studygroupfinder.GroupMember;
 import p466.studygroupfinder.StudyGroup;
@@ -130,6 +132,67 @@ public class StudyGroupController {
 
             redirectAttributes.addFlashAttribute("error", "You have already joined this group.");
         }
+        return "redirect:/groups";
+    }
+    private StudyGroup findEditable(Long id, User user) {
+        StudyGroup group = groupRepo.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        if (!canEdit(user, group)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+        return group;
+    }
+
+    @GetMapping("/{id}/edit")
+    public String editForm(@PathVariable Long id,
+                           @AuthenticationPrincipal User user,
+                           Model model) {
+        StudyGroup group = findEditable(id, user);
+
+        StudyGroupForm form = new StudyGroupForm();
+        form.setCourseId(group.getCourseId());
+        form.setTitle(group.getTitle());
+        form.setDescription(group.getDescription());
+        form.setLocation(group.getLocation());
+        form.setMeetingTime(group.getMeetingTime());
+        form.setCapacity(group.getCapacity());
+
+        model.addAttribute("groupForm", form);
+        model.addAttribute("groupId", id);
+        return "edit-group";
+    }
+
+    @PostMapping("/{id}/edit")
+    public String editGroup(@PathVariable Long id,
+                            @AuthenticationPrincipal User user,
+                            @Valid @ModelAttribute("groupForm") StudyGroupForm form,
+                            Errors errors,
+                            Model model,
+                            RedirectAttributes redirectAttributes) {
+        StudyGroup group = findEditable(id, user);
+
+        if (form.getCourseId() != null && !form.getCourseId().isBlank()
+                && !courseRepo.existsById(form.getCourseId())) {
+            errors.rejectValue("courseId", "invalid", "Please select an existing course");
+        }
+        if (form.getCapacity() < memberRepo.countByStudyGroupId(id)) {
+            errors.rejectValue("capacity", "tooSmall",
+                    "Capacity cannot be lower than the current number of members");
+        }
+        if (errors.hasErrors()) {
+            model.addAttribute("groupId", id);
+            return "edit-group";
+        }
+
+        group.setCourseId(form.getCourseId());
+        group.setTitle(form.getTitle());
+        group.setDescription(form.getDescription());
+        group.setLocation(form.getLocation());
+        group.setMeetingTime(form.getMeetingTime());
+        group.setCapacity(form.getCapacity());
+        groupRepo.save(group);
+
+        redirectAttributes.addFlashAttribute("success", "Group updated.");
         return "redirect:/groups";
     }
 }
